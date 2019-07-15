@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: tour-of-heroes
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - './config/.env'
+    volumes:
+      - './config:/app/config'
+      - './src:/app/src'
+      - './database:/app/database'
+      - './doc:/app/doc'
+      - './tests:/app/tests'
+    ports:
+      - 4001:4001
+      # - 9229:9229
+    entrypoint:
+      - ./entrypoint.sh
+      - ./node_modules/.bin/nodemon
+      #- --inspect-brk=0.0.0.0 , break before code starts
+      #- --inspect=0.0.0.0
+      - ./bin/server
+
+  postgres:
+    image: postgres:10.9-alpine
+    container_name: toh-db
+    environment:
+      POSTGRES_DB: tour-of-heroes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - 'toh-postgres:/var/lib/postgresql/data'
+    ports:
+      - 5432:5432
+
+volumes:
+  toh-postgres: ~
