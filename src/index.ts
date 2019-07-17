@@ -7,7 +7,7 @@ import * as path from 'path';
 import * as Boom from 'boom';
 import config from '../config';
 import { bootstrap } from './bootstrap/index';
-import { getLoggerInstance } from './utils/logger';
+import { getLoggerInstance, Logger } from './utils/logger';
 // middlewares
 import routeMiddleware from './routes/index';
 import errorMiddleware from './middlewares/error';
@@ -21,6 +21,7 @@ const app = new Koa();
 bootstrap()
   .then(() => {
     app.use(staticServe({ rootDir: docPath, rootPath: '/api/docs' }));
+    app.use(Logger.koa(logger));
     app.use(helmet());
     app.use(
       koaBodyparser({

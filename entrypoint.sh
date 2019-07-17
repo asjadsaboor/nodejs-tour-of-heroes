@@ -2,7 +2,7 @@
 
 
 # Generate API Documentation
-npm run apidocs
+# npm run apidocs
 
 npm run migrate:run
 

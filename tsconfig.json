@@ -16,6 +16,7 @@
       "noImplicitAny": true,
       "suppressImplicitAnyIndexErrors": true,
       "typeRoots": ["node_modules/@types", "./typings"],
+      "resolveJsonModule": true,
       "outDir": "dist",
       "rootDirs": ["src"]
     },
