@@ -9,7 +9,6 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=$ECR_URL
       - PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[",]//g' | sed 's/version://g' | tr -d '[[:space:]]')
       - echo $PACKAGE_VERSION
   build:
@@ -18,13 +17,13 @@ phases:
       - echo Building compilation container for api...
       - chmod +x entrypoint.sh
       - docker build -t toh .
-      - docker tag toh:latest $REPOSITORY_URI:$PACKAGE_VERSION
+      - docker tag toh:latest $ECR_URL:$PACKAGE_VERSION
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:$PACKAGE_VERSION
+      - docker push $ECR_URL:$PACKAGE_VERSION
       - echo Writing image definitions file...
-      - printf '[{"name":"api","imageUri":"%s"}]' $REPOSITORY_URI:$PACKAGE_VERSION > imagedefinitions.json
+      - printf '[{"name":"api","imageUri":"%s"}]' $ECR_URL:$PACKAGE_VERSION > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
